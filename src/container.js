@@ -3,9 +3,7 @@ const utils = require('./utils')
 const curry = require('lodash.curry')
 const pipe = require('lodash.flow')
 
-const container = (bindings = {}) => {
-  const classResolver = resolver()
-
+const container = (bindings = {}, classResolver = resolver()) => {
   const bind = (name, factoryFn) => {
     bindings[name] = factoryFn
   }
