@@ -1,6 +1,7 @@
-const container = () => {
-  const instances = {}
-  const bindings = {}
+const resolver = require('./resolver')
+
+const container = (instances = {}, bindings = {}) => {
+  const classResolver = resolver()
 
   const bind = (name, factoryFn) => {
     bindings[name] = factoryFn
@@ -14,6 +15,8 @@ const container = () => {
     if (name in bindings) {
       return bindings[name](this)
     }
+
+    return classResolver.createClassInstance(name, make)
   }
 
   const singleton = (name, factoryFn) => bind(
@@ -28,9 +31,14 @@ const container = () => {
     instances[name] = object
   }
 
-  return { instance, bind, make, singleton }
+  const addResolveDir = function (dir) {
+    classResolver.addDir(dir)
+    return this
+  }
+
+  return { instance, bind, make, singleton, addResolveDir }
 }
 
 module.exports = container()
 
-module.exports.createEmpty = container
+module.exports.createEmpty = _ => container()

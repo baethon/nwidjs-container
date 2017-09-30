@@ -23,5 +23,9 @@
       "describe",
       "it"
     ]
+  },
+  "dependencies": {
+    "lodash.cond": "^4.5.2",
+    "lodash.flow": "^3.5.0"
   }
 }
