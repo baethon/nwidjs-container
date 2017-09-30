@@ -57,4 +57,56 @@ describe('Container', () => {
       expect(injectTest.testFromResolve).to.be.instanceOf(Test)
     })
   })
+
+  describe('Extending objects', () => {
+    it('allows to extend bound objects', () => {
+      const container = createContainer()
+      const extendFn = object => {
+        object.foo = 'foo'
+      }
+      const spy = sinon.spy(extendFn)
+
+      container.bind('test', () => new Test())
+      container.extend('test', spy)
+
+      const test = container.make('test')
+
+      expect(test).to.be.instanceOf(Test)
+      expect(test.foo).to.equal('foo')
+      expect(spy).to.have.been.calledWith(test, container)
+    })
+
+    it('allows to extend singleton', () => {
+      const container = createContainer()
+      const spy = sinon.spy(test => {
+        test.foo = Math.random()
+      })
+
+      container.singleton('test', () => new Test())
+      container.extend('test', spy)
+
+      const instance = container.make('test')
+      const { foo } = instance
+
+      const secondInstance = container.make('test')
+
+      expect(secondInstance).to.equal(instance)
+      expect(secondInstance.foo).to.equal(foo)
+      expect(spy).to.have.been.calledOnce // eslint-disable-line
+    })
+
+    it('allows to extend unbound class factories', () => {
+      const container = createContainer()
+        .addResolveDir(__dirname)
+
+      container.extend('stubs/Test', test => {
+        test.foo = 'foo'
+      })
+
+      const test = container.make('stubs/Test')
+
+      expect(test).to.be.instanceOf(Test)
+      expect(test).to.have.property('foo', 'foo')
+    })
+  })
 })

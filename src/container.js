@@ -13,8 +13,10 @@ const container = (bindings = {}, classResolver = resolver()) => {
       return bindings[name](this)
     }
 
-    return classResolver.createClassInstance(name, make)
+    return makeClass(name)
   }
+
+  const makeClass = name => classResolver.createClassInstance(name, make)
 
   const instance = curry((name, object) => bind(name, utils.always(object)))
 
@@ -31,7 +33,16 @@ const container = (bindings = {}, classResolver = resolver()) => {
     return this
   }
 
-  return { instance, bind, make, singleton, addResolveDir }
+  const extend = function (name, extendFn) {
+    const bindingFn = bindings[name] || (_ => makeClass(name))
+
+    bind(name, pipe(
+      bindingFn,
+      utils.tap(object => extendFn(object, this))
+    ))
+  }
+
+  return { instance, bind, make, singleton, addResolveDir, extend }
 }
 
 module.exports = container
