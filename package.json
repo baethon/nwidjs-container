@@ -1,0 +1,25 @@
+{
+  "name": "@baethon/nwidjs-container",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Radoslaw Mejer <radmen@radmen.info>",
+  "license": "MIT",
+  "scripts": {
+    "lint": "standard",
+    "lint:fix": "standard --fix",
+    "prepush": "npm run lint",
+    "test": "mocha"
+  },
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "husky": "^0.14.3",
+    "mocha": "^3.5.3",
+    "standard": "^10.0.3"
+  },
+  "standard": {
+    "globals": [
+      "describe",
+      "it"
+    ]
+  }
+}
