@@ -1,6 +1,9 @@
 const resolver = require('./resolver')
+const utils = require('./utils')
+const curry = require('lodash.curry')
+const pipe = require('lodash.flow')
 
-const container = (instances = {}, bindings = {}) => {
+const container = (bindings = {}) => {
   const classResolver = resolver()
 
   const bind = (name, factoryFn) => {
@@ -8,10 +11,6 @@ const container = (instances = {}, bindings = {}) => {
   }
 
   const make = function (name) {
-    if (name in instances) {
-      return instances[name]
-    }
-
     if (name in bindings) {
       return bindings[name](this)
     }
@@ -19,17 +18,15 @@ const container = (instances = {}, bindings = {}) => {
     return classResolver.createClassInstance(name, make)
   }
 
+  const instance = curry((name, object) => bind(name, utils.always(object)))
+
   const singleton = (name, factoryFn) => bind(
     name,
-    container => {
-      instances[name] = factoryFn(container)
-      return instances[name]
-    }
+    pipe(
+      factoryFn,
+      utils.tap(instance(name))
+    )
   )
-
-  const instance = (name, object) => {
-    instances[name] = object
-  }
 
   const addResolveDir = function (dir) {
     classResolver.addDir(dir)

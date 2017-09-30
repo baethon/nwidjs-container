@@ -1,6 +1,7 @@
 const path = require('path')
 const utils = require('./utils')
 const cond = require('lodash.cond')
+const pipe = require('lodash.flow')
 
 const moduleExists = module => {
   try {
@@ -17,7 +18,7 @@ const resolveLocalInjects = modulePath => utils.map(cond([
   [utils.otherwise, utils.identity]
 ]))
 
-const getResolvedInjects = (modulePath, make) => utils.pipe(
+const getResolvedInjects = (modulePath, make) => pipe(
   getInjects,
   resolveLocalInjects(modulePath),
   utils.map(make)
