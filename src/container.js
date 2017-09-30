@@ -36,6 +36,4 @@ const container = (bindings = {}) => {
   return { instance, bind, make, singleton, addResolveDir }
 }
 
-module.exports = container()
-
-module.exports.createEmpty = _ => container()
+module.exports = container

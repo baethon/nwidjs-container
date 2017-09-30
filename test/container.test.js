@@ -1,5 +1,5 @@
 const { expect, use } = require('chai')
-const { createEmpty } = require('../src/container')
+const createContainer = require('../src/container')
 const sinon = require('sinon')
 const sinonChai = require('sinon-chai')
 const Test = require('./stubs/Test')
@@ -9,7 +9,7 @@ use(sinonChai)
 
 describe('Container', () => {
   it('resolves bound instances', () => {
-    const container = createEmpty()
+    const container = createContainer()
     const instance = {}
 
     container.instance('test', instance)
@@ -17,7 +17,7 @@ describe('Container', () => {
   })
 
   it('binds instance factories', () => {
-    const container = createEmpty()
+    const container = createContainer()
     const spy = sinon.stub()
     const expectedResult = {}
 
@@ -30,7 +30,7 @@ describe('Container', () => {
   })
 
   it('binds singleton factory', () => {
-    const container = createEmpty()
+    const container = createContainer()
 
     container.singleton('test', Math.random)
 
@@ -41,7 +41,7 @@ describe('Container', () => {
   })
 
   describe('Automatic class resolving', () => {
-    const container = createEmpty()
+    const container = createContainer()
         .addResolveDir(__dirname)
 
     it('resolves class', () => {
@@ -54,7 +54,7 @@ describe('Container', () => {
 
       expect(injectTest).to.be.instanceof(InjectTest)
       expect(injectTest.testFromResolve).to.be.instanceOf(Test)
-      expect(injectTest.testFromRelative).to.be.instanceOf(Test)
+      expect(injectTest.testFromResolve).to.be.instanceOf(Test)
     })
   })
 })
