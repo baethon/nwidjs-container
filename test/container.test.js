@@ -42,7 +42,7 @@ describe('Container', () => {
 
   describe('Automatic class resolving', () => {
     const container = createContainer()
-        .addResolveDir(__dirname)
+      .addResolveDir(__dirname)
 
     it('resolves class', () => {
       const test = container.make('stubs/Test')
@@ -50,11 +50,14 @@ describe('Container', () => {
     })
 
     it('injects resolved instances', () => {
+      container.instance('foo', 'foo')
+
       const injectTest = container.make('stubs/InjectTest')
 
       expect(injectTest).to.be.instanceof(InjectTest)
       expect(injectTest.testFromResolve).to.be.instanceOf(Test)
       expect(injectTest.testFromResolve).to.be.instanceOf(Test)
+      expect(injectTest.foo).to.equal('foo')
     })
   })
 

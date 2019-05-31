@@ -1,11 +1,12 @@
 class InjectTest {
-  constructor (testFromResolve, testFromRelative) {
+  constructor (foo, testFromResolve, testFromRelative) {
+    this.foo = foo
     this.testFromResolve = testFromResolve
     this.testFromRelative = testFromRelative
   }
 
   static get $inject () {
-    return ['stubs/Test', './Test']
+    return ['foo', 'stubs/Test', './Test']
   }
 }
 
